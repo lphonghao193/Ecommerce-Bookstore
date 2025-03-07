@@ -1,0 +1,171 @@
+/* Flexbox Layout */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    flex: 1;
+}
+
+/* Header Styles */
+header {
+    background-color: #DCD7C9;
+    color: #2C3930;
+    padding: 15px 15px 0 15px
+}
+
+nav h1 a.logo {
+    color: #2C3930;
+}
+
+header div a {
+    text-decoration: none;
+    color: black
+}
+
+.search-bar {
+    /* margin: 0 10%; */
+    flex: 0 0 50%;
+}
+
+
+nav ul li {
+    display: inline;
+    margin-right: 40px;
+}
+
+nav ul li div {
+    display: flex;
+}
+
+nav ul li a {
+    color: #2C3930;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    color: #586d5f;
+}
+
+nav ul li a.active {
+    color: #A27B5C;
+    font-weight: bold;
+}
+/* Main Content */
+main {
+    padding: 20px;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #DCD7C9;
+    color: #2C3930;
+}
+
+header.nav-mb {
+    display: none;
+}
+
+@media (max-width: 574px) {
+    header.nav-pc {
+        display: none;
+    }
+
+    header.nav-mb {
+        display: initial;
+    }
+
+    header {
+        text-align: left;
+        padding-left: 15px;
+    }
+
+    nav ul {
+        display: block;
+        text-align: center;
+    }
+
+    nav ul li {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    nav {
+        display: none;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    button.show-nav-btn  {
+        background: none;
+        border: none;
+    }
+}
+
+/* Full-page overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #DCD7C9;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 1000;
+    /* transform: translateY(-100%);
+    transition: transform 0.4s ease-in-out; */
+}
+
+/* Overlay menu styles */
+.overlay-menu {
+    list-style: none;
+    text-align: center;
+    padding: 0;
+}
+
+.overlay-menu li {
+    margin: 20px 0;
+}
+
+.overlay-menu a {
+    color: #3F4F44;
+
+    font-size: 28px;
+    text-decoration: none;
+    /* font-weight: bold; */
+}
+
+/* Close button */
+.close-btn {
+    position: absolute;
+    /* margin-right: 30px; */
+    right: 30px;
+    top: 10px;
+    color: #3F4F44;
+
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+div#overlay-nav form {
+    margin: 0 15%;
+}
+
+.custom-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

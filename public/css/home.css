@@ -1,0 +1,17 @@
+.bi-arrow-left-circle, .bi-arrow-right-circle {
+    color: black;
+    opacity: 10%;
+}
+
+.bi-arrow-left-circle:hover, .bi-arrow-right-circle:hover {
+    color: black;
+    opacity: 100%;
+}
+
+.carousel-item {
+    transition: transform 1s ease-in-out, opacity 0.8s ease-in-out;
+}
+
+.carousel-item.active {
+    opacity: 1;
+}
