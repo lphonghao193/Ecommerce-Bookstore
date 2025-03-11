@@ -34,18 +34,12 @@ function getUserCart($username) {
 }
 
 function processUser() {
-    if (isset($_POST['username'])) {
-        $_SESSION['tempUsername'] = $_POST["username"];
-    }
 
     $user = getUserInfomation();
-
     if (!empty($user)) {
-        $_SESSION['role'] = $user["ROLE"];
+        $_SESSION['user'] = $user;
         $_SESSION['logIn'] = true;
         $_SESSION['cart'] = getUserCart($user["USERNAME"]);
-
-        unset($_SESSION['tempUsername']);
         echo "<script>window.location.href = \"index.php\"</script>";
     } else {
         // $_SESSION['error'] = "Incorrect username or password!"; 

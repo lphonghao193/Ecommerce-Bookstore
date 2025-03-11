@@ -6,6 +6,7 @@ function navBar($activeNav) {
     $aboutPath = BASE_URL . "index.php?page=about";
     $cartPath = BASE_URL . "index.php?page=cart";
     $loginPath = BASE_URL . "index.php?page=login";
+    $infoPath = BASE_URL . "index.php?page=info";
     $navHome = $activeNav == "home" ? "active" : "";
     $navProd = $activeNav == "prod" ? "active" : "";
     $navCateg = $activeNav == "categ" ? "active" : "";
@@ -17,7 +18,7 @@ function navBar($activeNav) {
     if (!isset($_SESSION['logIn']) || $_SESSION['logIn'] === false) {
         $loginButton =  "<button style=\"border: none; background-color: #DCD7C9\"><a href=\"$loginPath\" class = \"fs-5\">Log in</a></button>";
     } else {
-        $loginButton =  "<a href=\"$loginPath\" class = \"$navLog\">"
+        $loginButton =  "<a href=\"$infoPath\" class = \"$navLog\">"
                     .   "<i class=\"bi bi-person-fill fs-2\"></i>"
                     .   "</a>";
     }

@@ -1,6 +1,7 @@
+<?php session_start(); ?>
 <?php require_once APP_PATH . '\app\views\partials\index.php'; ?>
 <?php require_once APP_PATH . '\app\controllers\LoginController.php' ?>
-<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

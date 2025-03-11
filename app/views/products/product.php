@@ -1,5 +1,7 @@
+<?php session_start() ?> 
 <?php require_once APP_PATH . '\app\views\partials\index.php'; ?>
 <?php require_once APP_PATH . '\app\controllers\ProductsController.php' ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

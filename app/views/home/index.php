@@ -1,12 +1,9 @@
+<?php session_start(); ?>
 <?php require_once APP_PATH . '\app\views\partials\index.php'; ?>
 <?php require_once APP_PATH . '\app\controllers\HomeController.php' ?>
-<?php 
-    session_unset();
-    session_start(); 
-    $_SESSION['role'] = 'guest';
-    $_SESSION['logIn'] = FALSE;
-    $_SESSION['cart'] = Array();
-?>
+<?php if (!isset($_SESSION['cart'])) $_SESSION['cart'] = [];?>
+<?php if (!isset($_SESSION['user'])) $_SESSION['user'] = [];?>
+<?php if (!isset($_SESSION['cart'])) $_SESSION['logIn'] = false;?>
 <!DOCTYPE html> 
 <html lang="en"> 
 <head>
@@ -17,30 +14,41 @@
 
 <body>
     <?php navBar("home"); ?>
-    <?php print_r($_SESSION) ?>
     <main> 
-        <section class="carousel slide">
+
+        <section class="carousel slide my-3">
             <div class="carousel-inner" id="carouselExampleControls">
-                <div class="carousel-item active">
-                    <img class="d-block w-100" src="<?php echo BASE_URL . '/public/assets/images/slide1.jpg'?>" alt="First slide">
-                </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100" src="<?php echo BASE_URL . '/public/assets/images/slide2.jpg'?>" alt="Second slide">
-                </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100" src="<?php echo BASE_URL . '/public/assets/images/slide3.jpg'?>" alt="Third slide">
-                </div>
                 <button class="carousel-control-prev" onclick="prevSlide()">
                     <i class="bi bi-arrow-left-circle fs-1"></i>
                 </button>
+
+                <div class="carousel-item active">
+                    <div class="d-flex justify-content-center">
+                        <img class="w-75" src="<?php echo BASE_URL . '/public/assets/images/slide1.jpg'?>" alt="First slide">
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <div class="d-flex justify-content-center">
+                        <img class="w-75" src="<?php echo BASE_URL . '/public/assets/images/slide2.jpg'?>" alt="Second slide">
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <div class="d-flex justify-content-center">
+                        <img class="w-75" src="<?php echo BASE_URL . '/public/assets/images/slide3.jpg'?>" alt="Third slide">
+                    </div>
+                </div>
+                
                 <button class="carousel-control-next" onclick="nextSlide()">
                     <i class="bi bi-arrow-right-circle fs-1"></i>
                 </button>
             </div>
         </section>
+
         
         <section> 
-            <h1 class="mt-3">Feature books</h1>
+            <h1 class="mt-3 custom-display">Feature books</h1>
             <div class="row mt-5">
                 <?php $products = getFeatureProducts(); ?>
                 <?php foreach ($products as $product): ?>
@@ -61,7 +69,7 @@
         </section>
 
         <section>
-            <h1>Categories</h1>
+            <h1 class="mt-3 custom-display">Categories</h1>
             <div class="row">
                 <?php $categories = getCategories();?>
                 <?php foreach ($categories as $category): ?>
@@ -78,7 +86,7 @@
         </section>
 
         <section class="quote-section">
-            <h1>Quote of the Day</h1>
+            <h1 class = "mt-3 custom-display">Quote of the Day</h1>
             <blockquote class="blockquote p-3">
                 <p class="mb-3">"The only way to do great work is to love what you do."</p>
                 <footer class="blockquote-footer">Steve Jobs</footer>

@@ -1,5 +1,4 @@
 <?php
-
 define('APP_PATH', __DIR__);
 define('BASE_URL', './'); 
 
@@ -41,11 +40,11 @@ switch ($page) {
         include APP_PATH . '\app\views\login\index.php';
         break; 
 
-    case 'logout':
-        include APP_PATH . '\app\views\login\logout.php';
+    case 'info':
+        include APP_PATH . '\app\views\userInfo\index.php';
         break; 
 
-    case 'logout':
+    case 'signup':
         include APP_PATH . '\app\views\login\signup.php';
         break; 
 
