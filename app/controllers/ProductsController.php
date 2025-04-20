@@ -1,113 +1,83 @@
-<?php 
-require_once APP_PATH . "\app\models\ProductsModel.php";
-require_once APP_PATH . "\app\models\CategoriesModel.php";
-$productsPerPage = 12;
-$productsCount = 0;
+<?php
+require_once "./app/models/ProductsModel.php";
+require_once "./app/models/CategoriesModel.php";
 
-
-if (isset($_POST['clear']) && $_POST['clear'] == 1) {
-    unset($_POST["sort-price"]) ;
-    unset($_POST["sort-name"]);
+if (!empty($_POST['clear']) && $_POST['clear'] == 1) {
+    unset($_POST['sort-price'], $_POST['sort-name']);
 }
 
 function getCategories() {
     $categoriesModel = new Categories(DATABASE);
-    $categories = $categoriesModel->getCategories();
-    return $categories;
-}
-
-function renderRadio($name, $id, $value, $checkedValue, $label) {
-    $checked = ($checkedValue == $value) ? "checked" : "";
-    $bgColor = "background-color:" . (($checkedValue == $value) ? "#A27B5C;" : "white;");
-    $icon = "";
-    if ($value == 2) {
-        $icon = "<i class='bi bi-sort-down fs-4'></i>";
-    } elseif ($value == 1) {
-        $icon = "<i class='bi bi-sort-up fs-4'></i>";
-    };
-    echo "<div class='col-12 col-md-6 col-lg-2 px-1 custom-display'>";
-    echo "<input class='d-none' type='radio' name='$name' id='$id' value='$value' onchange='this.form.submit()' $checked>";
-    echo "<label class='btn sort-btn w-100 d-flex align-items-center justify-content-center gap-1' for='$id' style='cursor: pointer; $bgColor'>";
-    echo "$label $icon";
-    echo "</label>";
-    echo "</div>";
-}
-
-
-function getSortPrice() {
-    $sortPrice = isset($_POST['sort-price']) ? $_POST['sort-price'] : -1;
-    return $sortPrice;
-}
-
-function getSortName() {
-    $sortName = isset($_POST['sort-name']) ? $_POST['sort-name'] : -1;
-    return $sortName;
+    return $categoriesModel->getCategories();
 }
 
 function getSelectedCategories() {
-    $selectedCategories = !empty($_GET['filter-category'])? $_GET['filter-category'] : [];
-    return $selectedCategories;
+    return $_GET['filter-category'] ?? [];
 }
 
 function getPriceRange() {
-    $range = Array(-1,-1);
-    if (!empty($_GET['filter-price-start']) && is_numeric($_GET['filter-price-start'])) {
-        $range[0] = $_GET['filter-price-start'];
-    }
-    if (!empty($_GET['filter-price-end']) && is_numeric($_GET['filter-price-end'])) {
-        $range[1] = $_GET['filter-price-end'];
-    }
-    return $range;
+    $start = !empty($_GET['filter-price-start']) && is_numeric($_GET['filter-price-start']) ? $_GET['filter-price-start'] : -1;
+    $end = !empty($_GET['filter-price-end']) && is_numeric($_GET['filter-price-end']) ? $_GET['filter-price-end'] : -1;
+    return [$start, $end];
 }
 
 function getPageNumber() {
-    $page = isset($_GET['page_id']) && is_numeric($_GET['page_id']) ? (int) $_GET['page_id'] : 1;
-    return $page;
+    return isset($_GET['page_id']) && is_numeric($_GET['page_id']) ? (int)$_GET['page_id'] : 1;
 }
 
-function getProductsWithConditions() {
+function getProductsWithConditions($limit = 12) {
+
+    $page = $_GET['pgn'] ?? 1;
+    $offset = ($page - 1) * $limit;
+
     $productsModel = new Products(DATABASE);
-
+    $sortPrice = $_GET['sort-price'] ?? null;
+    $sortName = $_GET['sort-name'] ?? null;
     $whereClauses = [];
-    if (!empty(getSelectedCategories())) {$whereClauses[] = "P.CATEGORY_ID IN (" . implode(", ", getSelectedCategories()) . ")";}
 
-    $priceRange = getPriceRange();
-    if ($priceRange[0] != -1) $whereClauses[] = "P.PRICE >= " . $priceRange[0];
-    if ($priceRange[1] != -1) $whereClauses[] = "P.PRICE <= " . $priceRange[1];
+    $selectedCategories = getSelectedCategories();
+    if (!empty($selectedCategories)) {
+        $whereClauses[] = "P.CATEGORY_ID IN (" . implode(", ", $selectedCategories) . ")";
+    }
 
-    $orderBy = Array();
-    if (getSortPrice() == 1) {$orderBy[] = "P.PRICE ASC";}
-    elseif (getSortPrice() == 2) {$orderBy[] = "P.PRICE DESC";}
-    if (getSortName() == 1) {$orderBy[] = "P.NAME ASC";}
-    else if (getSortName() == 2) {$orderBy[] = "P.NAME DESC";}
+    list($priceStart, $priceEnd) = getPriceRange();
+    if ($priceStart != -1) $whereClauses[] = "P.PRICE >= $priceStart";
+    if ($priceEnd != -1) $whereClauses[] = "P.PRICE <= $priceEnd";
 
+    $orderBy = [];
+    if ($sortPrice == 1) $orderBy[] = "P.PRICE ASC";
+    elseif ($sortPrice == 2) $orderBy[] = "P.PRICE DESC";
 
-    global $productsPerPage;
-    $page = getPageNumber();
-    $offset = ($page - 1) * $productsPerPage;
+    if ($sortName == 1) $orderBy[] = "P.NAME ASC";
+    elseif ($sortName == 2) $orderBy[] = "P.NAME DESC";
 
-    
-    global $productsCount;
-    $products = $productsModel->getProductsWithConditions($whereClauses, $orderBy, $productsPerPage, $offset);
-    $productsCount = count($productsModel->getProductsWithConditions($whereClauses, $orderBy));
-    return $products;
+    // Fetch paginated products
+    $products = $productsModel->getProductsWithConditions($whereClauses, $orderBy, $limit, $offset);
+
+    // Get total filtered product count for pagination
+    $allFilteredProducts = $productsModel->getProductsWithConditions($whereClauses, $orderBy);
+    $productsCount = count($allFilteredProducts);
+
+    // Calculate total pages
+    $totalPage = ceil($productsCount / $limit);
+
+    return [$totalPage, $products];
 }
 
-function getTotalPages() {
-    global $productsPerPage;
-    global $productsCount;
-    return ceil($productsCount/$productsPerPage);
-}
 
 function getProduct() {
-    $id = isset($_GET["id"]) ? $_GET["id"] : -1;   
-    if ($id === -1) return []; 
+    $id = $_GET['id'] ?? -1;
+    if ($id === -1) return [];
     $productsModel = new Products(DATABASE);
     return $productsModel->getProductById($id);
 }
 
+function getProducts() {
+    $productsModel = new Products(DATABASE);
+    return $productsModel->getProducts();
+}
+
 function getFeatureProducts() {
     $productsModel = new Products(DATABASE);
-    $products = $productsModel->getFeatureProduct();
-    return $products;
+    return $productsModel->getFeatureProduct();
 }

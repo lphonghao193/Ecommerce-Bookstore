@@ -1,0 +1,85 @@
+.tab-container {
+    width: 400px;
+    padding: 20px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 30px;
+}
+
+
+form input.login-input{
+    border: none;
+    border-bottom: 2px solid gray;
+    height: 40px;
+    padding: 0 10px;
+    width: 100%;
+    border-radius: 0; 
+    outline: none;
+    background-color: transparent; 
+}
+
+form input.login-input:focus {
+    border-bottom: 2px solid black;
+}
+
+label[for="type"] {
+    height: 40px;
+    padding: 0 10px;
+}
+
+select#login-type {
+    text-align: center; 
+    text-align-last: center;
+    height: 40px;
+    border-radius: 8px;
+    width: 100px;
+
+}
+
+.input-group {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.container-fluid {
+    display: flex;
+    margin: 20px 0 20px 0;
+    justify-content: center;
+
+}
+
+
+a {
+    text-decoration: underline;
+    color: #000;
+}
+
+.btn.btn-light {
+    border: 2px solid #555;
+    background-color: #fff;
+    color: #000;
+}
+
+.btn.btn-light:hover {
+    background-color: #555;
+    color: #fff
+}
+
+.btn.btn-dark {
+    background-color: #000;
+    color: #fff
+}
+
+.btn.btn-dark:hover {
+    background-color: #aaa;
+    color: #000;
+    border: 2px solid #aaa;
+}
+
+.align-justify {
+    text-align: justify !important;
+    font-size: 13px;
+}

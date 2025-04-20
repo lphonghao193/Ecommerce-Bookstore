@@ -9,7 +9,6 @@ window.onload = function() {
 };
 
 function showSlide(index) {
-    console.log(1)
     carouselItems.forEach((item, i) => {
         item.classList.toggle("active", i === index);
     });

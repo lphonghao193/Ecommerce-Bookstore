@@ -1,6 +1,6 @@
 <?php 
-require_once APP_PATH . "\app\models\ProductsModel.php";
-require_once APP_PATH . "\app\models\CategoriesModel.php";
+require_once  "./app/models/ProductsModel.php";
+require_once  "./app/models/CategoriesModel.php";
 
 function getFeatureProducts() {
     $productsModel = new Products(DATABASE);

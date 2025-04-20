@@ -1,17 +1,6 @@
 <?php
-
-function dbConfig() {
-    $db = Array(
-        'host' => 'localhost',
-        'username' => 'root',
-        'password' => '1234',
-        'database' => 'ecommerce'
-    );
-    return $db;
-}
-
-function getHashKey() {
-    return "1";
-}
-
+define('HOST', 'localhost');
+define('USERNAME', 'root');
+define('PASSWORD', '1234');
+define('DBNAME', 'ecommerce')
 ?>

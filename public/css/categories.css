@@ -1,0 +1,69 @@
+/* General Typography */
+h5 {
+    font-weight: 700;
+    margin: 12px 0 6px;
+    font-size: 1.2rem;
+    color: #333;
+    text-align: center;
+}
+
+h6 {
+    text-align: center;
+    font-weight: 400;
+    color: #666;
+    font-size: 0.95rem;
+    margin: 0 10px;
+    line-height: 1.4;
+}
+
+/* Grid Container */
+.row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+    justify-items: center;
+}
+
+/* Category Card */
+.category {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 1.8rem 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    transition: all 0.25s ease;
+    max-width: 250px;
+    width: 100%;
+}
+
+.category i {
+    font-size: 3rem;
+    color: #4CAF50; /* Customize icon color if needed */
+    transition: color 0.2s ease;
+}
+
+.category:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transform: translateY(-6px);
+}
+
+.category:hover i {
+    color: #2e7d32;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .category {
+        padding: 1.5rem 1rem;
+        max-width: 90%;
+    }
+
+    h5 {
+        font-size: 1.1rem;
+    }
+
+    h6 {
+        font-size: 0.9rem;
+    }
+}

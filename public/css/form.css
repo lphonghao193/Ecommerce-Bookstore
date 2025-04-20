@@ -1,0 +1,68 @@
+h1 {
+    font-weight: 800;
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;   
+}
+
+form {
+    width: 80%;
+}
+
+.form .form-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.form .form-group-2 {
+    display: flex;
+    width: 100%;
+    margin: 20px 0;
+    justify-content: space-between;
+}
+
+.form .form-group-2 div {
+    width: 40%;
+}
+
+
+.input {
+    border: 1px solid #000;
+    border-radius: 10px;
+    height: 40px;
+    padding: 0px 10px;
+}
+
+textarea {
+    border: 1px solid #000;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+.input:focus, textarea:focus {
+    border: 2px solid #000;
+}
+
+.btn-light {
+    border: 2px solid #000;
+    border-radius: 10px;
+}
+
+.btn-light:hover {
+    border: 2px solid #000;
+}
+
+label {
+    font-weight: 600;
+    size: 20px;
+}

@@ -1,0 +1,38 @@
+section {
+    display: block;
+    background-color: #fffbf0;
+    border: 2px solid #000;
+    padding: 20px;
+    border-radius: 20px;
+    margin: 30px auto 0 auto;
+    width: 50%;
+}
+
+
+section h2 {
+    margin-bottom: 30px;
+    font-weight: 700;
+    text-align: center;
+}
+
+button.material-symbols-outlined {
+    background: none;
+    border: none;
+}
+
+section p {
+    align-items: center;
+    display: flex;
+}
+
+.logout-btn {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+@media (max-width: 600px) {
+    section {
+        width: 100%;
+    }
+}

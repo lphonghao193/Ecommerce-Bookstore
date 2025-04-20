@@ -1,4 +1,22 @@
 <?php 
+
+function encryptPassword($psw) {
+    return hash('sha256', $psw);
+}
+
+function sanitizeString($var) { 
+	$var = stripslashes($var); 
+	$var = htmlentities($var); 
+	$var = strip_tags($var); 
+	return $var; 
+} 
+function sanitizeMySQL($connection, $var) { 
+	// Using the mysqli extension 
+	$var = $connection->real_escape_string($var); 
+	$var = sanitizeString($var); 
+	return $var; 
+}
+
 class Users {
     private $connection;
 
@@ -6,76 +24,75 @@ class Users {
         $this->connection = $db->getConnection();
     }
 
-    function getUser($username, $password) {
-        $users = array();
-        // TODO: Prepare statement to prevent SQL injection
-        $query = "SELECT * FROM USER WHERE USERNAME = '$username' AND PASSWORD = '$password'";
+    function getUser($username, $password, $type) {
+        $role = $type == 0 ? "USER" : "ADMIN";
+        $hashedPassword = hash('sha256', $password);
+    
+        $stmt = $this->connection->prepare(
+            "SELECT * FROM USER WHERE USERNAME = ? AND PASSWORD = ? AND ROLE = ?"
+        );
+    
+        if ($stmt === false) {
+            // Handle error appropriately
+            error_log("Prepare failed: " . $this->connection->error);
+            return [];
+        }
+    
+        $stmt->bind_param("sss", $username, $hashedPassword, $role);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        if ($result && $user = $result->fetch_assoc()) {
+            return $user;
+        }
+    
+        return [];
+    }
+    
+
+    function getUSerInfo($id, $role) {       
+        $query = "SELECT * FROM USER WHERE USER_ID = $id AND ROLE = '$role'";
         $result = $this->connection->query($query);   
         
-        if ($result) {
-            while ($row = $result->fetch_assoc()) {
-                $users[] = $row;
-            }
-        }
+        if ($result) {return $result->fetch_assoc();}
         
-        return !empty($users) ? $users[0] : [];
+        return [];
     }
 
-    function getUserCart($username) {
-        $cart = array();
+    function checkUsername($username) {
 
-        $query = "SELECT PRODUCT_ID FROM CART WHERE USERNAME = '$username'";
+        $query = "SELECT USERNAME FROM USER";
         $result = $this->connection->query($query);
         if ($result) {
             while ($row = $result->fetch_assoc()) {
-                $cart[] = $row["PRODUCT_ID"];
+                if ($row['USERNAME'] == $username) return false;
             }
+            return true;
         }
-        
-        
-        return !empty($cart) ? $cart : [];
+        return true;        
     }
 
-    function updateUser($arr) {
-        // CREATE TABLE USER (
-        //     FNAME VARCHAR(255) NOT NULL,
-        //     LNAME VARCHAR(255) NOT NULL,
-        //     USERNAME VARCHAR(255) NOT NULL PRIMARY KEY,
-        //     PASSWORD VARCHAR(255) NOT NULL,
-        //     PHONE_NUMBER VARCHAR(20) UNIQUE,
-        //     EMAIL VARCHAR(255) UNIQUE,
-        //     LOCATION VARCHAR(255),
-        //     ROLE VARCHAR(5) NOT NULL CHECK (ROLE IN ('ADMIN', 'USER'))
-        // );
-        $username = $arr["USERNAME"];
-        $fname = $arr["FNAME"];
-        $lname = $arr["LNAME"];
-        $pnum = $arr["PHONE_NUMBER"];
-        $loca = $arr["LOCATION"];
-        $email = $arr["EMAIL"];
+    function checkEmail($email) {
+        $query = "SELECT EMAIL FROM USER";
+        $result = $this->connection->query($query);
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                if ($row['EMAIL'] == $email) return false;
+            }
+            return true;
+        }
+        return true;        
+    }
 
-        $query1 = "SELECT * FROM USER WHERE USERNAME<>'$username' AND PHONE_NUMBER='$pnum'";
-        $result1 = $this->connection->query($query1);
-        $query2 = "SELECT * FROM USER WHERE USERNAME<>'$username' AND EMAIL='$email'";
-        $result2 = $this->connection->query($query2);
-        if ($result1->num_rows != 0) {
-            echo "<script>alert('Error: Phone Number already in use by another user.');</script>";
-        }
-        elseif ($result2->num_rows != 0) {
-            echo "<script>alert('Error: Email already in use by another user.');</script>";           
-        }
-        else {
-            $query = "UPDATE USER SET PHONE_NUMBER='$pnum' WHERE USERNAME='$username'";
-            $this->connection->query($query);
-            $query = "UPDATE USER SET EMAIL='$email' WHERE USERNAME='$username'";
-            $this->connection->query($query);
-            $query = "UPDATE USER SET FNAME='$fname' WHERE USERNAME='$username'";
-            $this->connection->query($query);
-            $query = "UPDATE USER SET LNAME='$lname' WHERE USERNAME='$username'";
-            $this->connection->query($query);
-            $query = "UPDATE USER SET LOCATION='$loca' WHERE USERNAME='$username'";
-            $this->connection->query($query); 
-            $_SESSION['user'] = $arr;
-        }    
+    function addUser($username, $password, $email) {
+        sanitizeMySQL($this->connection, $username);
+        sanitizeMySQL($this->connection, $password);
+        sanitizeMySQL($this->connection, $email);
+
+        $password = encryptPassword($password);
+        $query = "INSERT INTO USER (USERNAME, PASSWORD, EMAIL, ROLE) VALUES 
+        ('$username', '$password', '$email', 'USER')";
+        if ($this->connection->query($query)) return true;
+        return false;
     }
 }

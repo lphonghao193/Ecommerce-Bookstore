@@ -1,57 +1,81 @@
 <?php
-define('APP_PATH', __DIR__);
-define('BASE_URL', './'); 
+require_once './config.php';
+require_once './Database.php';
 
-require_once 'config.php';
-require_once APP_PATH . '/Database.php';
-
-$temp = dbConfig();
 define('DATABASE', new Database(
-    $temp['host'],
-    $temp['username'],
-    $temp['password'],
-    $temp['database']
-));
+    HOST,
+    USERNAME,
+    PASSWORD,
+    DBNAME
+)); 
 
+session_start();
+
+if (!isset($_SESSION['role'])) $_SESSION['role'] = 'GUEST';
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 switch ($page) {
     case 'home':
-        include APP_PATH . '\app\views\home\index.php';
+        include './app/views/index.php';
         break;
 
     case 'products':
-        include APP_PATH . '\app\views\products\index.php';
+        include './app/views/products/products.php';
         break;
 
     case 'product':
-        include APP_PATH . '\app\views\products\product.php';
+        include './app/views/products/product.php';
         break;
 
     case 'categories':
-        include APP_PATH . '\app\views\categories\index.php';
+        include './app/views/categories.php';
         break;   
     
     case 'about':
-        include APP_PATH . '\app\views\about\index.php';
+        include './app/views/contact.php';
         break; 
     
     case 'login':
-        include APP_PATH . '\app\views\login\index.php';
-        break; 
-
-    case 'info':
-        include APP_PATH . '\app\views\userInfo\index.php';
+        if (!isset($_SESSION['role']) || $_SESSION['role'] == 'GUEST') {
+            include './app/views/login/login.php';
+        } else {
+            include './app/views/index.php';
+        }
         break; 
 
     case 'signup':
-        include APP_PATH . '\app\views\login\signup.php';
+        if (!isset($_SESSION['role']) || $_SESSION['role'] == 'GUEST') {
+            include './app/views/login/signup.php';
+        } else {
+            include './app/views/index.php';
+        }
         break; 
 
-    case 'cart':
-        include APP_PATH . '\app\views\cart\index.php';
-        break; 
+    case 'mng':
+        if (isset($_SESSION['role']) && $_SESSION['role'] == 'ADMIN') {
+            include './app/views/manage.php';
+        } else {
+            include './app/views/401.php';
+        }
+        break;
+    
+    case 'add':
+        if (isset($_SESSION['role']) && $_SESSION['role'] == 'ADMIN') {
+            include './app/views/products/addbook.php';
+        } else {
+            include './app/views/401.php';
+        }
+        break;
+    
+    case 'edit':
+        if (isset($_SESSION['role']) && $_SESSION['role'] == 'ADMIN') {
+            include './app/views/products/editbook.php';
+        } else {
+            include './app/views/401.php';
+        }
+        break;
 
     default:
+        include './app/views/404.php';
         break;
 }
